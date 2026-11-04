@@ -11,9 +11,37 @@
 </head>
 
 <body>
-    <div>
-        <h1>Hello World</h1>
+    <header>
+        <h1>Create a Personal Learning Portfolio</h1> <!--Main header-->
+    </header>
+
+    <div><!--personal information form section-->
+        <h2>Personal information</h2>
+
+        <form>
+            <label for="fname">Full Name:</label><br>
+            <input type="text" id="fname" name="fname" required><br>
+            
+            <label for="femail">Email:</label><br>
+            <input type="email" id="lname" name="femail" required><br>
+            
+            <label for="fphone">Phone number:</label><br>
+            <input type="tel" id="fphone" name="fphone" required><br>
+            
+            <label for="fliketodo">What you like to do:</label><br>
+            <input type="text" id="fliketodo" name="fliketodo" required><br>
+
+            <label for="ftry">What you've Tried:</label><br>
+            <input type="text" id="ftry" name="ftry" required><br>
+
+            <label for="fCurious">What you Curious About:</label><br>
+            <input type="text" id="fCurious" name="fCurious" required><br>
+
+            <button type="submit">Submit</button> <!--submit button and reset button-->
+            <button type="reset">Reset</button>
+        </form>
     </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
         crossorigin="anonymous"></script>
