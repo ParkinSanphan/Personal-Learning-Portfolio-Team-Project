@@ -1,0 +1,66 @@
+/* ===== Responsive ===== */
+
+/* กันเนื้อหาล้นจอ */
+body {
+  overflow-x: hidden;
+  word-wrap: break-word;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Tablet และเล็กกว่า: ต่ำกว่า 992px */
+@media (max-width: 991.98px) {
+  header h1 {
+    font-size: 2rem;
+  }
+
+  main.container {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+
+/* Tablet แนวตั้ง: ต่ำกว่า 768px */
+@media (max-width: 767.98px) {
+  header h1 {
+    font-size: 1.75rem;
+  }
+
+  header {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+
+  .card-title {
+    font-size: 1.25rem;
+  }
+}
+
+/* Mobile: ต่ำกว่า 576px */
+@media (max-width: 575.98px) {
+  header h1 {
+    font-size: 1.4rem;
+  }
+
+  main.container {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .card-title {
+    font-size: 1.15rem;
+  }
+
+  /* กัน iPhone zoom ตอนแตะช่องกรอก */
+  .form-control {
+    font-size: 16px;
+  }
+
+  /* ปุ่มกดง่ายบนมือถือ */
+  .btn {
+    padding: 12px;
+  }
+}
