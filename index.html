@@ -5,146 +5,175 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Personal Learning Portfolio</title>
-    <link href="./style.css" rel="stylesheet">
+    <link href="./css/style.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
 </head>
 
 <body>
-    <header>
-        <h1>Create a Personal Learning Portfolio</h1> <!--Main header-->
+    <header class="text-center py-5 bg-primary text-white">
+        <h1 class="fw-bold">Create a Personal Learning Portfolio</h1> <!--Main header-->
     </header>
 
-    <div> <!--personal information form section-->
-        <h2>Personal information</h2>
+    <main class="container py-4">
+        <section class="card shadow-sm mb-4">
+            <div class="card-body"> <!--personal information form section-->
+                <h2 class="card-title mb-4">Personal information</h2>
 
-        <form>
-            <label for="fname">Full Name:</label><br>
-            <input type="text" id="fname" name="fname" required><br>
-            
-            <label for="femail">Email:</label><br>
-            <input type="email" id="femail" name="femail" required><br>
-            
-            <label for="fphone">Phone number:</label><br>
-            <input type="tel" id="fphone" name="fphone" required><br>
-            
-            <label for="fliketodo">What you like to do:</label><br>
-            <input type="text" id="fliketodo" name="fliketodo" required><br>
+                <form>
+                    <div class="mb-3">
+                        <label for="fname" class="form-label">Full Name:</label>
+                        <input type="text" class="form-control" id="fname" name="fname" required>
+                    </div>
 
-            <label for="ftry">What you've Tried:</label><br>
-            <input type="text" id="ftry" name="ftry" required><br>
+                    <div class="mb-3">
+                        <label for="femail" class="form-label">Email:</label>
+                        <input type="email" class="form-control" id="femail" name="femail" required>
+                    </div>
 
-            <label for="fCurious">What you Curious About:</label><br>
-            <input type="text" id="fCurious" name="fCurious" required><br>
+                    <div class="mb-3">
+                        <label for="fphone" class="form-label">Phone number:</label>
+                        <input type="tel" class="form-control" id="fphone" name="fphone" required>
+                    </div>
 
-            <button type="submit">Submit</button> <!--submit button and reset button-->
-            <button type="reset">Reset</button>
-        </form>
-    </div>
+                    <div class="mb-3">
+                        <label for="fliketodo" class="form-label">What you like to do:</label>
+                        <input type="text" class="form-control" id="fliketodo" name="fliketodo" required>
+                    </div>
 
-    <div> <!--Portfolio Item section-->
-        <h2>Portfolio Item</h2>
+                    <div class="mb-3">
+                        <label for="ftry" class="form-label">What you've Tried:</label>
+                        <input type="text" class="form-control" id="ftry" name="ftry" required>
+                    </div>
 
-        <form>
-            <label for="ftitle">Title:</label><br>
-            <input type="text" id="ftitle" name="ftitle" required><br>
-            
-            <label for="ftype">Type:</label><br>
-            <input type="text" id="ftype" name="ftype" required><br>
-            
-            <label for="fdate">Date:</label><br>
-            <input type="date" id="fdate" name="fdate" required><br>
-            
-            <label for="frole">Role:</label><br>
-            <input type="text" id="frole" name="frole" required><br>
+                    <div class="mb-3">
+                        <label for="fCurious" class="form-label">What you Curious About:</label>
+                        <input type="text" class="form-control" id="fCurious" name="fCurious" required>
+                    </div>
 
-            <label for="fskill">Skills:</label><br>
-            <input type="text" id="fskill" name="fskill" required><br>
+                    <button type="submit" class="btn btn-primary">Submit</button> <!--submit button and reset button-->
+                    <button type="reset" class="btn btn-outline-secondary">Reset</button>
 
-            <label for="freflection">Reflection:</label><br>
-            <input type="text" id="freflection" name="freflection" required><br>
+                </form>
+            </div>
+        </section>
 
-            <button type="submit">Submit</button> <!--submit button and reset button-->
-            <button type="reset">Reset</button>
-        </form>
-    </div>
+        <section class="card shadow-sm mb-4">
+            <div class="card-body"> <!--Portfolio Item section-->
+                <h2 class="card-title mb-4">Portfolio Item</h2>
+                <form>
+                    <div class="mb-3">
+                        <label for="ftitle" class="form-label">Title:</label>
+                        <input type="text" class="form-control" id="ftitle" name="ftitle" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="ftype" class="form-label">Type:</label>
+                        <input type="text" class="form-control" id="ftype" name="ftype" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="fdate" class="form-label">Date:</label>
+                        <input type="date" class="form-control" id="fdate" name="fdate" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="frole" class="form-label">Role:</label>
+                        <input type="text" class="form-control" id="frole" name="frole" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="fskill" class="form-label">Skills:</label>
+                        <input type="text" class="form-control" id="fskill" name="fskill" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="freflection" class="form-label">Reflection:</label>
+                        <input type="text" class="form-control" id="freflection" name="freflection" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button> <!--submit button and reset button-->
+                    <button type="reset" class="btn btn-outline-secondary">Reset</button>
+                </form>
+            </div>
+        </section>
 
-   <!--Profile section-->
-    <section id="profile"> 
-        <h2>HELLO, I AM</h2>
+        <!--Profile section-->
+        <section id="profile" class="card shadow-sm mb-4">
+            <div class="card-body text-center">
+                <h2>HELLO, I AM</h2>
+                <!-- Profile picture -->
+                <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Profile picture"
+                    class="rounded-circle mb-3" width="120" height="120">
+                <!-- Name -->
+                <h3>Your Name</h3>
+                <!-- Email -->
+                <p>Email: <a href="mailto:example@example.com">example@example.com</a></p>
+                <!-- Phone number -->
+                <p>Phone: <a href="tel:+661234567890">123-456-7890</a></p>
+            </div>
+        </section>
 
-        <!-- Profile picture -->
-        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Profile picture">
-
-        <!-- Name -->
-        <h3>Your Name</h3>
-
-        <!-- Email -->
-        <p>Email: <a href="mailto:example@example.com">example@example.com</a></p>
-   
-        <!-- Phone number -->
-        <p>Phone: <a href="tel:+661234567890">123-456-7890</a></p>
-    </section> 
-
-    <!--About me section--> 
-    <section id="about-me">
-        <h2>About Me</h2>
-
-        <h3>What I Enjoy</h3>
-        <p>...</p>
-
-        <h3>What I've Tried</h3>
-        <p>...</p>
-
-        <h3>What I'm Curious About</h3>
-        <p>...</p>
-
-    </section>
-
-        <!-- Portfolio item display section -->
-    <section id="portfolio-item-display">
-        <div>
-
-            <!-- Title of the work -->
-            <h2>TITLE</h2>
-
-            <!-- picture of the work -->
-            <img src="https://picsum.photos/400/250" alt="Picture of the work">
-
-            <!-- Information about the work -->
-            <div>
-
-                <!-- Type of the work -->
-                <h3>Type</h3>
-                <p>Course Assignment</p>
-
-                <!-- Date of the work -->
-                <h3>Date</h3>
-                <p>2026-11-04</p>
-
-                <!-- Role in the work -->
-                <h3>Role</h3>
-                <p>Developer</p>
-
-                <!-- Description of the work -->
-                <h3>Description</h3>
-                <p>Created a personal website.</p>
-
-                <!-- Skills related to the work -->
-                <h3>Skills</h3>
-                <ul>
-                    <li>HTML</li>
-                    <li>CSS</li>
-                </ul>
-
-                <!-- Reflection on the work -->
-                <h3>Reflection</h3>
-                <p>Write a reflection here.</p>
+        <!--About me section-->
+        <section id="about-me" class="card shadow-sm mb-4">
+            <div class="card-body">
+                <h2 class="card-title mb-4">About Me</h2>
+                <div class="mb-3">
+                    <h3>What I Enjoy</h3>
+                    <p>...</p>
+                </div>
+                <div class="mb-3">
+                    <h3>What I've Tried</h3>
+                    <p>...</p>
+                </div>
+                <div class="mb-3">
+                    <h3>What I'm Curious About</h3>
+                    <p>...</p>
+                </div>
 
             </div>
-        </div>
-    </section>
 
+        </section>
+
+        <!-- Portfolio item display section -->
+        <section id="portfolio-item-display" class="card shadow-sm mb-4">
+            <div class="card-body">
+
+                <!-- Title of the work -->
+                <h2 class="card-title mb-3">TITLE</h2>
+
+                <!-- picture of the work -->
+                <img src="https://picsum.photos/400/250" alt="Picture of the work" class="img-fluid rounded mb-3">
+
+                <!-- Information about the work -->
+                <div>
+
+                    <!-- Type of the work -->
+                    <h3>Type</h3>
+                    <p>Course Assignment</p>
+
+                    <!-- Date of the work -->
+                    <h3>Date</h3>
+                    <p>2026-11-04</p>
+
+                    <!-- Role in the work -->
+                    <h3>Role</h3>
+                    <p>Developer</p>
+
+                    <!-- Description of the work -->
+                    <h3>Description</h3>
+                    <p>Created a personal website.</p>
+
+                    <!-- Skills related to the work -->
+                    <h3>Skills</h3>
+                    <ul>
+                        <li>HTML</li>
+                        <li>CSS</li>
+                    </ul>
+
+                    <!-- Reflection on the work -->
+                    <h3>Reflection</h3>
+                    <p>Write a reflection here.</p>
+
+                </div>
+            </div>
+        </section>
+    </main>
+    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
         crossorigin="anonymous"></script>
