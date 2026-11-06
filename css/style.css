@@ -101,6 +101,44 @@ main .btn-outline-secondary {
 main form .btn + .btn {
   margin-left: 0.5rem;
 }
+/* ===== PART 4: Profile และ About Me ===== */
+
+#profile h2 {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--c-muted);
+}
+
+/* รูปโปรไฟล์: ขอบขาว + วงแหวนสีหลัก */
+#profile img {
+  object-fit: cover;
+  border: 4px solid #fff;
+  box-shadow: 0 0 0 3px var(--c-primary);
+}
+
+#profile h3 {
+  font-size: 1.75rem;
+}
+
+#profile p {
+  margin-bottom: 0.35rem;
+  color: var(--c-muted);
+}
+
+/* About Me: แต่ละหัวข้อมีแถบสีด้านซ้าย */
+#about-me .card-body > div {
+  padding-left: 1rem;
+  border-left: 4px solid var(--c-accent);
+}
+
+#about-me h3 {
+  font-size: 1.15rem;
+  color: var(--c-primary-dark);
+}
+
+#about-me p {
+  margin-bottom: 0;
+}
 /* ===== Responsive ===== */
 
 /* กันเนื้อหาล้นจอ */
