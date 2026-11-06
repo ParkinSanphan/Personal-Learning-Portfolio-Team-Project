@@ -177,6 +177,38 @@ main form .btn + .btn {
   font-size: 0.9rem;
   font-weight: 500;
 }
+/* ===== PART 6: Border, Shadow และ Hover ===== */
+
+main .card {
+  border: 1px solid var(--c-border);
+  border-radius: 16px;
+  transition: box-shadow 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
+}
+
+/* hover เฉพาะอุปกรณ์ที่มีเมาส์ (กัน hover ค้างบนมือถือ) */
+@media (hover: hover) {
+  /* .shadow-sm เป็น !important จึงเปลี่ยนเงาผ่านตัวแปรแทน */
+  main .card:hover {
+    --bs-box-shadow-sm: 0 10px 28px rgba(31, 37, 64, 0.14);
+    border-color: rgba(67, 56, 202, 0.4);
+  }
+
+  /* ยกเฉพาะการ์ดผลงาน การ์ดฟอร์มไม่ขยับ จะได้ไม่รบกวนตอนพิมพ์ */
+  #portfolio-item-display:hover {
+    transform: translateY(-4px);
+  }
+}
+
+/* ผู้ใช้ที่ปิดอนิเมชันในระบบ จะไม่เห็นการเคลื่อนไหว */
+@media (prefers-reduced-motion: reduce) {
+  main .card {
+    transition: none;
+  }
+
+  #portfolio-item-display:hover {
+    transform: none;
+  }
+}
 /* ===== Responsive ===== */
 
 /* กันเนื้อหาล้นจอ */
