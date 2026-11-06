@@ -1,128 +1,118 @@
-const STORAGE_KEY_PROFILE = 'powerup-portfolio-profile';
-const STORAGE_KEY_ITEM = 'powerup-portfolio-item';
+const $ = (selector) => document.querySelector(selector);
 
-const profileForm = document.querySelector('#profile-form');
-const itemForm = document.querySelector('#item-form');
+// suffix '' = portfolio 1, '-2' = portfolio 2
+function setupPortfolio(suffix) {
+    const KEY_PROFILE = `powerup-portfolio-profile${suffix}`;
+    const KEY_ITEM = `powerup-portfolio-item${suffix}`;
+    const id = (name) => `#${name}${suffix}`;
 
-// ฟังก์ชันอัปเดตข้อมูล Profile บนหน้าเว็บ
-function showProfile(profile) {
-    document.querySelector('#fname-display').textContent = profile.displayName || 'Your Name';
-    
-    const emailElem = document.querySelector('#femail-display');
-    emailElem.textContent = profile.email || 'example@example.com';
-    emailElem.href = profile.email ? `mailto:${profile.email}` : '#';
+    const profileForm = $(id('profile-form'));
+    const itemForm = $(id('item-form'));
 
-    const phoneElem = document.querySelector('#fphone-display');
-    phoneElem.textContent = profile.phone || '123-456-7890';
-    phoneElem.href = profile.phone ? `tel:${profile.phone}` : '#';
+    function showProfile(profile) {
+        $(id('fname-display')).textContent = profile.displayName || 'Your Name';
 
-    document.querySelector('#fliketodo-display').textContent = profile.whatIEnjoy || '...';
-    document.querySelector('#ftry-display').textContent = profile.whatIveTried || '...';
-    document.querySelector('#fCurious-display').textContent = profile.whatImCuriousAbout || '...';
-}
+        const emailElem = $(id('femail-display'));
+        emailElem.textContent = profile.email || 'example@example.com';
+        emailElem.href = profile.email ? `mailto:${profile.email}` : '#';
 
-// ฟังก์ชันอัปเดตข้อมูล Portfolio Item บนหน้าเว็บ
-function showItem(item) {
-    document.querySelector('#item-title-display').textContent = item.title || 'TITLE';
-    document.querySelector('#item-type-display').textContent = item.type || '-';
-    document.querySelector('#item-date-display').textContent = item.date || '-';
-    document.querySelector('#item-role-display').textContent = item.role || '-';
-    document.querySelector('#item-reflection-display').textContent = item.reflection || '-';
+        const phoneElem = $(id('fphone-display'));
+        phoneElem.textContent = profile.phone || '123-456-7890';
+        phoneElem.href = profile.phone ? `tel:${profile.phone}` : '#';
 
-    const skillsContainer = document.querySelector('#item-skills-display');
-    skillsContainer.innerHTML = '';
-    if (item.skills && item.skills.length > 0) {
-        item.skills.forEach(skill => {
+        $(id('fliketodo-display')).textContent = profile.whatIEnjoy || '...';
+        $(id('ftry-display')).textContent = profile.whatIveTried || '...';
+        $(id('fCurious-display')).textContent = profile.whatImCuriousAbout || '...';
+    }
+
+    function showItem(item) {
+        $(id('item-title-display')).textContent = item.title || 'TITLE';
+        $(id('item-type-display')).textContent = item.type || '-';
+        $(id('item-date-display')).textContent = item.date || '-';
+        $(id('item-role-display')).textContent = item.role || '-';
+        $(id('item-reflection-display')).textContent = item.reflection || '-';
+
+        const skillsContainer = $(id('item-skills-display'));
+        skillsContainer.innerHTML = '';
+        (item.skills || []).forEach((skill) => {
             const li = document.createElement('li');
             li.textContent = skill.trim();
             skillsContainer.appendChild(li);
         });
     }
+
+    profileForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+        const error = $(id('portfolio-error'));
+
+        const name = $(id('fname')).value.trim();
+        const email = $(id('femail')).value.trim();
+        const phone = $(id('fphone')).value.trim();
+        const enjoy = $(id('fliketodo')).value.trim();
+        const tried = $(id('ftry')).value.trim();
+        const curious = $(id('fCurious')).value.trim();
+
+        if (!name || !email || !phone || !enjoy || !tried || !curious) {
+            error.textContent = 'กรุณากรอกข้อมูลโปรไฟล์ให้ครบถ้วน';
+            return;
+        }
+        error.textContent = '';
+
+        const profileData = {
+            displayName: name,
+            email: email,
+            phone: phone,
+            whatIEnjoy: enjoy,
+            whatIveTried: tried,
+            whatImCuriousAbout: curious
+        };
+        showProfile(profileData);
+        localStorage.setItem(KEY_PROFILE, JSON.stringify(profileData));
+    });
+
+    itemForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+        const error = $(id('item-error'));
+
+        const title = $(id('ftitle')).value.trim();
+        const type = $(id('ftype')).value.trim();
+        const date = $(id('fdate')).value;
+        const role = $(id('frole')).value.trim();
+        const skillsRaw = $(id('fskill')).value.trim();
+        const reflection = $(id('freflection')).value.trim();
+
+        if (!title || !type || !date || !role || !skillsRaw || !reflection) {
+            error.textContent = 'กรุณากรอกข้อมูลผลงานให้ครบถ้วน';
+            return;
+        }
+        error.textContent = '';
+
+        const itemData = {
+            title: title,
+            type: type,
+            date: date,
+            role: role,
+            skills: skillsRaw.split(',').filter((s) => s.trim() !== ''),
+            reflection: reflection
+        };
+        showItem(itemData);
+        localStorage.setItem(KEY_ITEM, JSON.stringify(itemData));
+    });
+
+    // โหลดข้อมูลที่บันทึกไว้ตอนเปิดหน้าเว็บ
+    const savedProfile = localStorage.getItem(KEY_PROFILE);
+    if (savedProfile) {
+        try { showProfile(JSON.parse(savedProfile)); }
+        catch (e) { console.error('Error parsing profile data:', e); }
+    }
+    const savedItem = localStorage.getItem(KEY_ITEM);
+    if (savedItem) {
+        try { showItem(JSON.parse(savedItem)); }
+        catch (e) { console.error('Error parsing item data:', e); }
+    }
 }
 
-// Submit Profile Form
-profileForm.addEventListener('submit', function (event) {
-    event.preventDefault();
-    const error = document.querySelector('#portfolio-error');
-    
-    const name = document.querySelector('#fname').value.trim();
-    const email = document.querySelector('#femail').value.trim();
-    const phone = document.querySelector('#fphone').value.trim();
-    const enjoy = document.querySelector('#fliketodo').value.trim();
-    const tried = document.querySelector('#ftry').value.trim();
-    const curious = document.querySelector('#fCurious').value.trim();
-
-    // Validation ตรวจสอบข้อมูลว่าง
-    if (!name || !email || !phone || !enjoy || !tried || !curious) {
-        error.textContent = 'กรุณากรอกข้อมูลโปรไฟล์ให้ครบถ้วน';
-        return;
-    }
-    
-    error.textContent = '';
-    
-    const profileData = {
-        displayName: name,
-        email: email,
-        phone: phone,
-        whatIEnjoy: enjoy,
-        whatIveTried: tried,
-        whatImCuriousAbout: curious
-    };
-    
-    showProfile(profileData);
-    localStorage.setItem(STORAGE_KEY_PROFILE, JSON.stringify(profileData));
-});
-
-// Submit Portfolio Item Form
-itemForm.addEventListener('submit', function (event) {
-    event.preventDefault();
-    const error = document.querySelector('#item-error');
-
-    const title = document.querySelector('#ftitle').value.trim();
-    const type = document.querySelector('#ftype').value.trim();
-    const date = document.querySelector('#fdate').value;
-    const role = document.querySelector('#frole').value.trim();
-    const skillsRaw = document.querySelector('#fskill').value.trim();
-    const reflection = document.querySelector('#freflection').value.trim();
-
-    // Validation ตรวจสอบข้อมูลว่าง
-    if (!title || !type || !date || !role || !skillsRaw || !reflection) {
-        error.textContent = 'กรุณากรอกข้อมูลผลงานให้ครบถ้วน';
-        return;
-    }
-
-    error.textContent = '';
-
-    const itemData = {
-        title: title,
-        type: type,
-        date: date,
-        role: role,
-        skills: skillsRaw.split(',').filter(s => s.trim() !== ''),
-        reflection: reflection
-    };
-
-    showItem(itemData);
-    localStorage.setItem(STORAGE_KEY_ITEM, JSON.stringify(itemData));
-});
-
-// โหลดข้อมูลจาก localStorage เมื่อโหลดหน้าเว็บ (Save -> Refresh -> Load)
 window.addEventListener('DOMContentLoaded', function () {
-    const savedProfile = localStorage.getItem(STORAGE_KEY_PROFILE);
-    if (savedProfile) {
-        try {
-            showProfile(JSON.parse(savedProfile));
-        } catch (e) {
-            console.error('Error parsing profile data:', e);
-        }
-    }
-
-    const savedItem = localStorage.getItem(STORAGE_KEY_ITEM);
-    if (savedItem) {
-        try {
-            showItem(JSON.parse(savedItem));
-        } catch (e) {
-            console.error('Error parsing item data:', e);
-        }
-    }
+    setupPortfolio('');    // portfolio 1
+    setupPortfolio('-2');  // portfolio 2
 });
