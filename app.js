@@ -1,118 +1,131 @@
 const $ = (selector) => document.querySelector(selector);
 
-// suffix '' = portfolio 1, '-2' = portfolio 2
-function setupPortfolio(suffix) {
-    const KEY_PROFILE = `powerup-portfolio-profile${suffix}`;
-    const KEY_ITEM = `powerup-portfolio-item${suffix}`;
-    const id = (name) => `#${name}${suffix}`;
+// แปลงลิงก์เป็น <a> tag ธรรมดา
+function createLinkElement(text) {
+    const urlText = text.trim();
+    if (!urlText) return null;
 
-    const profileForm = $(id('profile-form'));
-    const itemForm = $(id('item-form'));
-
-    function showProfile(profile) {
-        $(id('fname-display')).textContent = profile.displayName || 'Your Name';
-
-        const emailElem = $(id('femail-display'));
-        emailElem.textContent = profile.email || 'example@example.com';
-        emailElem.href = profile.email ? `mailto:${profile.email}` : '#';
-
-        const phoneElem = $(id('fphone-display'));
-        phoneElem.textContent = profile.phone || '123-456-7890';
-        phoneElem.href = profile.phone ? `tel:${profile.phone}` : '#';
-
-        $(id('fliketodo-display')).textContent = profile.whatIEnjoy || '...';
-        $(id('ftry-display')).textContent = profile.whatIveTried || '...';
-        $(id('fCurious-display')).textContent = profile.whatImCuriousAbout || '...';
-    }
-
-    function showItem(item) {
-        $(id('item-title-display')).textContent = item.title || 'TITLE';
-        $(id('item-type-display')).textContent = item.type || '-';
-        $(id('item-date-display')).textContent = item.date || '-';
-        $(id('item-role-display')).textContent = item.role || '-';
-        $(id('item-reflection-display')).textContent = item.reflection || '-';
-
-        const skillsContainer = $(id('item-skills-display'));
-        skillsContainer.innerHTML = '';
-        (item.skills || []).forEach((skill) => {
-            const li = document.createElement('li');
-            li.textContent = skill.trim();
-            skillsContainer.appendChild(li);
-        });
-    }
-
-    profileForm.addEventListener('submit', function (event) {
-        event.preventDefault();
-        const error = $(id('portfolio-error'));
-
-        const name = $(id('fname')).value.trim();
-        const email = $(id('femail')).value.trim();
-        const phone = $(id('fphone')).value.trim();
-        const enjoy = $(id('fliketodo')).value.trim();
-        const tried = $(id('ftry')).value.trim();
-        const curious = $(id('fCurious')).value.trim();
-
-        if (!name || !email || !phone || !enjoy || !tried || !curious) {
-            error.textContent = 'กรุณากรอกข้อมูลโปรไฟล์ให้ครบถ้วน';
-            return;
-        }
-        error.textContent = '';
-
-        const profileData = {
-            displayName: name,
-            email: email,
-            phone: phone,
-            whatIEnjoy: enjoy,
-            whatIveTried: tried,
-            whatImCuriousAbout: curious
-        };
-        showProfile(profileData);
-        localStorage.setItem(KEY_PROFILE, JSON.stringify(profileData));
-    });
-
-    itemForm.addEventListener('submit', function (event) {
-        event.preventDefault();
-        const error = $(id('item-error'));
-
-        const title = $(id('ftitle')).value.trim();
-        const type = $(id('ftype')).value.trim();
-        const date = $(id('fdate')).value;
-        const role = $(id('frole')).value.trim();
-        const skillsRaw = $(id('fskill')).value.trim();
-        const reflection = $(id('freflection')).value.trim();
-
-        if (!title || !type || !date || !role || !skillsRaw || !reflection) {
-            error.textContent = 'กรุณากรอกข้อมูลผลงานให้ครบถ้วน';
-            return;
-        }
-        error.textContent = '';
-
-        const itemData = {
-            title: title,
-            type: type,
-            date: date,
-            role: role,
-            skills: skillsRaw.split(',').filter((s) => s.trim() !== ''),
-            reflection: reflection
-        };
-        showItem(itemData);
-        localStorage.setItem(KEY_ITEM, JSON.stringify(itemData));
-    });
-
-    // โหลดข้อมูลที่บันทึกไว้ตอนเปิดหน้าเว็บ
-    const savedProfile = localStorage.getItem(KEY_PROFILE);
-    if (savedProfile) {
-        try { showProfile(JSON.parse(savedProfile)); }
-        catch (e) { console.error('Error parsing profile data:', e); }
-    }
-    const savedItem = localStorage.getItem(KEY_ITEM);
-    if (savedItem) {
-        try { showItem(JSON.parse(savedItem)); }
-        catch (e) { console.error('Error parsing item data:', e); }
-    }
+    const a = document.createElement('a');
+    a.href = urlText.startsWith('http') ? urlText : `https://${urlText}`;
+    a.textContent = urlText;
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+    return a;
 }
 
-window.addEventListener('DOMContentLoaded', function () {
-    setupPortfolio('');    // portfolio 1
-    setupPortfolio('-2');  // portfolio 2
+// suffix '' = portfolio 1 (sample-portfolio-1.json), '-2' = portfolio 2 (sample-portfolio-2.json)
+function setupPortfolio(suffix = '') {
+    // กำหนดชื่อ Key ตามไฟล์ JSON ที่กำหนด
+    const STORAGE_KEY = suffix === '-2' ? 'sample-portfolio-2.json' : 'sample-portfolio-1.json';
+    const getEl = (name) => $(`#${name}${suffix}`);
+
+    // ดึงข้อมูลทั้งหมดจาก localStorage (หรือคืนค่าออบเจกต์ว่างถ้ายังไม่มี)
+    function getStoredData() {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        try {
+            return raw ? JSON.parse(raw) : {};
+        } catch (e) {
+            return {};
+        }
+    }
+
+    // แสดงข้อมูล Profile
+    function showProfile(data) {
+        if (!data) return;
+        getEl('fname-display').textContent = data.displayName || 'Your Name';
+        
+        const emailEl = getEl('femail-display');
+        emailEl.textContent = data.email || 'example@example.com';
+        emailEl.href = data.email ? `mailto:${data.email}` : '#';
+
+        const phoneEl = getEl('fphone-display');
+        phoneEl.textContent = data.phone || '123-456-7890';
+        phoneEl.href = data.phone ? `tel:${data.phone}` : '#';
+
+        getEl('fliketodo-display').textContent = data.whatIEnjoy || '-';
+        getEl('ftry-display').textContent = data.whatIveTried || '-';
+        getEl('fCurious-display').textContent = data.whatImCuriousAbout || '-';
+    }
+
+    // แสดงข้อมูล Item/ผลงาน
+    function showItem(data) {
+        if (!data) return;
+        getEl('item-title-display').textContent = data.title || 'TITLE';
+        getEl('item-type-display').textContent = data.type || '-';
+        getEl('item-date-display').textContent = data.date || '-';
+        getEl('item-role-display').textContent = data.role || '-';
+        getEl('item-reflection-display').textContent = data.reflection || '-';
+
+        // แสดง Skills
+        const skillsContainer = getEl('item-skills-display');
+        skillsContainer.innerHTML = data.skills?.map(s => `<li>${s.trim()}</li>`).join('') || '';
+
+        // แสดง Evidence เป็นลิงก์ธรรมดา
+        const evidenceContainer = getEl('item-evidence-display');
+        evidenceContainer.innerHTML = '';
+        
+        if (data.evidence && data.evidence.length > 0) {
+            data.evidence.forEach(link => {
+                const elem = createLinkElement(link);
+                if (elem) {
+                    const p = document.createElement('p');
+                    p.className = 'mb-1';
+                    p.appendChild(elem);
+                    evidenceContainer.appendChild(p);
+                }
+            });
+        }
+        
+        if (!evidenceContainer.children.length) {
+            evidenceContainer.innerHTML = '<p class="mb-0">-</p>';
+        }
+    }
+
+    // Submit Profile Form
+    getEl('profile-form')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const profileData = {
+            displayName: getEl('fname').value,
+            email: getEl('femail').value,
+            phone: getEl('fphone').value,
+            whatIEnjoy: getEl('fliketodo').value,
+            whatIveTried: getEl('ftry').value,
+            whatImCuriousAbout: getEl('fCurious').value
+        };
+        showProfile(profileData);
+
+        const currentData = getStoredData();
+        currentData.profile = profileData;
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(currentData));
+    });
+
+    // Submit Item Form
+    getEl('item-form')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const itemData = {
+            title: getEl('ftitle').value,
+            type: getEl('ftype').value,
+            date: getEl('fdate').value,
+            role: getEl('frole').value,
+            skills: getEl('fskill').value.split(',').filter(Boolean),
+            reflection: getEl('freflection').value,
+            evidence: getEl('fevidence').value.split(',').filter(Boolean)
+        };
+        showItem(itemData);
+
+        const currentData = getStoredData();
+        currentData.item = itemData;
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(currentData));
+    });
+
+    // โหลดข้อมูลเก่าจาก localStorage ตอนเปิดหน้าเว็บ
+    const savedData = getStoredData();
+    if (savedData.profile) showProfile(savedData.profile);
+    if (savedData.item) showItem(savedData.item);
+}
+
+// ทำงานเมื่อโหลด DOM เสร็จ
+window.addEventListener('DOMContentLoaded', () => {
+    setupPortfolio('');   //-> sample-portfolio-1.json
+    setupPortfolio('-2'); //-> sample-portfolio-2.json
 });

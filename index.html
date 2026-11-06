@@ -87,6 +87,11 @@
                                 <label for="freflection" class="form-label">Reflection:</label>
                                 <input type="text" class="form-control" id="freflection" name="freflection" required>
                             </div>
+                            <div class="mb-3">
+                                <label for="fevidence" class="form-label">Evidence (links, comma separated):</label>
+                                <input type="text" class="form-control" id="fevidence" name="fevidence"
+                                    placeholder="https://..., https://..." required>
+                            </div>
                             <p class="form-error small mb-2 text-danger" id="item-error" role="alert"></p>
                             <button type="submit" class="btn btn-primary">Submit Item</button>
                             <button type="reset" class="btn btn-outline-secondary">Reset</button>
@@ -165,6 +170,11 @@
                                 <label for="freflection-2" class="form-label">Reflection:</label>
                                 <input type="text" class="form-control" id="freflection-2" name="freflection-2" required>
                             </div>
+                            <div class="mb-3">
+                                <label for="fevidence-2" class="form-label">Evidence (links, comma separated):</label>
+                                <input type="text" class="form-control" id="fevidence-2" name="fevidence-2"
+                                    placeholder="https://..., https://..." required>
+                            </div>
                             <p class="form-error small mb-2 text-danger" id="item-error-2" role="alert"></p>
                             <button type="submit" class="btn btn-primary">Submit Item</button>
                             <button type="reset" class="btn btn-outline-secondary">Reset</button>
@@ -207,7 +217,6 @@
                 <!-- Portfolio Item Display Section -->
                 <div id="portfolio-item-display">
                     <h2 id="item-title-display" class="card-title mb-3">TITLE</h2>
-                    <img src="https://picsum.photos/400/250" alt="Picture of the work" class="img-fluid rounded mb-3">
                     <div>
                         <h3>Type</h3>
                         <p id="item-type-display">Course Assignment</p>
@@ -226,6 +235,11 @@
 
                         <h3>Reflection</h3>
                         <p id="item-reflection-display">Write a reflection here.</p>
+
+                        <h3>Evidence</h3>
+                        <div id="item-evidence-display" class="d-flex flex-column gap-3">
+                            <p class="mb-0">-</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -264,7 +278,6 @@
                 <!-- Portfolio Item Display Section -->
                 <div id="portfolio-item-display-2">
                     <h2 id="item-title-display-2" class="card-title mb-3">TITLE</h2>
-                    <img src="https://picsum.photos/400/250" alt="Picture of the work" class="img-fluid rounded mb-3">
                     <div>
                         <h3>Type</h3>
                         <p id="item-type-display-2">Course Assignment</p>
@@ -283,10 +296,17 @@
 
                         <h3>Reflection</h3>
                         <p id="item-reflection-display-2">Write a reflection here.</p>
+
+                        <h3>Evidence</h3>
+                        <div id="item-evidence-display-2" class="d-flex flex-column gap-3">
+                            <p class="mb-0">-</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
+
+
 
     </main>
 
