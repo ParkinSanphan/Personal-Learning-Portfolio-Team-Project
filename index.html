@@ -16,81 +16,163 @@
     </header>
 
     <main class="container py-4">
-        <!-- Personal Information & Portfolio Item Form Card -->
-        <section class="card shadow-sm mb-4">
-            <div class="card-body">
-                <h2 class="card-title mb-4">Personal information</h2>
+        <div class="row justify-content-start">
+            <div class="col-md-6">
+                <!-- Personal Information & Portfolio Item Form Card -->
+                <section class="card shadow-sm mb-4">
+                    <div class="card-body">
+                        <h2 class="card-title mb-4">Personal information portfolio 1</h2>
 
-                <form id="profile-form">
-                    <div class="mb-3">
-                        <label for="fname" class="form-label">Full Name:</label>
-                        <input type="text" class="form-control" id="fname" name="fname" required>
-                    </div>
+                        <form id="profile-form">
+                            <div class="mb-3">
+                                <label for="fname" class="form-label">Full Name:</label>
+                                <input type="text" class="form-control" id="fname" name="fname" required>
+                            </div>
 
-                    <div class="mb-3">
-                        <label for="femail" class="form-label">Email:</label>
-                        <input type="email" class="form-control" id="femail" name="femail" required>
-                    </div>
+                            <div class="mb-3">
+                                <label for="femail" class="form-label">Email:</label>
+                                <input type="email" class="form-control" id="femail" name="femail" required>
+                            </div>
 
-                    <div class="mb-3">
-                        <label for="fphone" class="form-label">Phone number:</label>
-                        <input type="tel" class="form-control" id="fphone" name="fphone" required>
-                    </div>
+                            <div class="mb-3">
+                                <label for="fphone" class="form-label">Phone number:</label>
+                                <input type="tel" class="form-control" id="fphone" name="fphone" required>
+                            </div>
 
-                    <div class="mb-3">
-                        <label for="fliketodo" class="form-label">What you like to do:</label>
-                        <input type="text" class="form-control" id="fliketodo" name="fliketodo" required>
-                    </div>
+                            <div class="mb-3">
+                                <label for="fliketodo" class="form-label">What you like to do:</label>
+                                <input type="text" class="form-control" id="fliketodo" name="fliketodo" required>
+                            </div>
 
-                    <div class="mb-3">
-                        <label for="ftry" class="form-label">What you've Tried:</label>
-                        <input type="text" class="form-control" id="ftry" name="ftry" required>
-                    </div>
+                            <div class="mb-3">
+                                <label for="ftry" class="form-label">What you've Tried:</label>
+                                <input type="text" class="form-control" id="ftry" name="ftry" required>
+                            </div>
 
-                    <div class="mb-3">
-                        <label for="fCurious" class="form-label">What you Curious About:</label>
-                        <input type="text" class="form-control" id="fCurious" name="fCurious" required>
-                    </div>
+                            <div class="mb-3">
+                                <label for="fCurious" class="form-label">What you Curious About:</label>
+                                <input type="text" class="form-control" id="fCurious" name="fCurious" required>
+                            </div>
 
-                    <p class="form-error small mb-2 text-danger" id="portfolio-error" role="alert"></p>
-                    <button type="submit" class="btn btn-primary">Submit Profile</button>
-                    <button type="reset" class="btn btn-outline-secondary">Reset</button>
-                </form>
+                            <p class="form-error small mb-2 text-danger" id="portfolio-error" role="alert"></p>
+                            <button type="submit" class="btn btn-primary">Submit Profile</button>
+                            <button type="reset" class="btn btn-outline-secondary">Reset</button>
+                        </form>
 
-                <!-- Portfolio Item Form -->
+                        <!-- Portfolio Item Form -->
 
-                <h2 class="card-title mb-4 mt-4">Portfolio Item</h2>
-                <form id="item-form">
-                    <div class="mb-3">
-                        <label for="ftitle" class="form-label">Title:</label>
-                        <input type="text" class="form-control" id="ftitle" name="ftitle" required>
+                        <h2 class="card-title mb-4 mt-4">Portfolio Item</h2>
+                        <form id="item-form">
+                            <div class="mb-3">
+                                <label for="ftitle" class="form-label">Title:</label>
+                                <input type="text" class="form-control" id="ftitle" name="ftitle" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="ftype" class="form-label">Type:</label>
+                                <input type="text" class="form-control" id="ftype" name="ftype" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="fdate" class="form-label">Date:</label>
+                                <input type="date" class="form-control" id="fdate" name="fdate" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="frole" class="form-label">Role:</label>
+                                <input type="text" class="form-control" id="frole" name="frole" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="fskill" class="form-label">Skills (comma separated):</label>
+                                <input type="text" class="form-control" id="fskill" name="fskill" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="freflection" class="form-label">Reflection:</label>
+                                <input type="text" class="form-control" id="freflection" name="freflection" required>
+                            </div>
+                            <p class="form-error small mb-2 text-danger" id="item-error" role="alert"></p>
+                            <button type="submit" class="btn btn-primary">Submit Item</button>
+                            <button type="reset" class="btn btn-outline-secondary">Reset</button>
+                        </form>
                     </div>
-                    <div class="mb-3">
-                        <label for="ftype" class="form-label">Type:</label>
-                        <input type="text" class="form-control" id="ftype" name="ftype" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="fdate" class="form-label">Date:</label>
-                        <input type="date" class="form-control" id="fdate" name="fdate" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="frole" class="form-label">Role:</label>
-                        <input type="text" class="form-control" id="frole" name="frole" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="fskill" class="form-label">Skills (comma separated):</label>
-                        <input type="text" class="form-control" id="fskill" name="fskill" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="freflection" class="form-label">Reflection:</label>
-                        <input type="text" class="form-control" id="freflection" name="freflection" required>
-                    </div>
-                    <p class="form-error small mb-2 text-danger" id="item-error" role="alert"></p>
-                    <button type="submit" class="btn btn-primary">Submit Item</button>
-                    <button type="reset" class="btn btn-outline-secondary">Reset</button>
-                </form>
+                </section>
             </div>
-        </section>
+
+            <div class="col-md-6">
+                <!-- Personal Information & Portfolio Item Form Card -->
+                <section class="card shadow-sm mb-4">
+                    <div class="card-body">
+                        <h2 class="card-title mb-4">Personal information portfolio 2</h2>
+
+                        <form id="profile-form">
+                            <div class="mb-3">
+                                <label for="fname" class="form-label">Full Name:</label>
+                                <input type="text" class="form-control" id="fname" name="fname" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="femail" class="form-label">Email:</label>
+                                <input type="email" class="form-control" id="femail" name="femail" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="fphone" class="form-label">Phone number:</label>
+                                <input type="tel" class="form-control" id="fphone" name="fphone" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="fliketodo" class="form-label">What you like to do:</label>
+                                <input type="text" class="form-control" id="fliketodo" name="fliketodo" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="ftry" class="form-label">What you've Tried:</label>
+                                <input type="text" class="form-control" id="ftry" name="ftry" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="fCurious" class="form-label">What you Curious About:</label>
+                                <input type="text" class="form-control" id="fCurious" name="fCurious" required>
+                            </div>
+
+                            <p class="form-error small mb-2 text-danger" id="portfolio-error" role="alert"></p>
+                            <button type="submit" class="btn btn-primary">Submit Profile</button>
+                            <button type="reset" class="btn btn-outline-secondary">Reset</button>
+                        </form>
+
+                        <!-- Portfolio Item Form -->
+
+                        <h2 class="card-title mb-4 mt-4">Portfolio Item</h2>
+                        <form id="item-form">
+                            <div class="mb-3">
+                                <label for="ftitle" class="form-label">Title:</label>
+                                <input type="text" class="form-control" id="ftitle" name="ftitle" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="ftype" class="form-label">Type:</label>
+                                <input type="text" class="form-control" id="ftype" name="ftype" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="fdate" class="form-label">Date:</label>
+                                <input type="date" class="form-control" id="fdate" name="fdate" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="frole" class="form-label">Role:</label>
+                                <input type="text" class="form-control" id="frole" name="frole" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="fskill" class="form-label">Skills (comma separated):</label>
+                                <input type="text" class="form-control" id="fskill" name="fskill" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="freflection" class="form-label">Reflection:</label>
+                                <input type="text" class="form-control" id="freflection" name="freflection" required>
+                            </div>
+                            <p class="form-error small mb-2 text-danger" id="item-error" role="alert"></p>
+                            <button type="submit" class="btn btn-primary">Submit Item</button>
+                            <button type="reset" class="btn btn-outline-secondary">Reset</button>
+                        </form>
+                    </div>
+                </section>
+            </div>
+        </div>
 
         <!-- Merged Portfolio Output Display Card -->
         <section id="portfolio-display" class="card shadow-sm mb-4">
@@ -148,6 +230,8 @@
                 </div>
             </div>
         </section>
+
+
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
