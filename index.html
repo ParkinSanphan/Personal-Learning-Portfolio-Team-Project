@@ -16,7 +16,7 @@
     </header>
 
     <main class="container py-4">
-        <!-- Personal Information Form -->
+        <!-- Personal Information & Portfolio Item Form Card -->
         <section class="card shadow-sm mb-4">
             <div class="card-body">
                 <h2 class="card-title mb-4">Personal information</h2>
@@ -56,13 +56,10 @@
                     <button type="submit" class="btn btn-primary">Submit Profile</button>
                     <button type="reset" class="btn btn-outline-secondary">Reset</button>
                 </form>
-            </div>
-        </section>
 
-        <!-- Portfolio Item Form -->
-        <section class="card shadow-sm mb-4">
-            <div class="card-body">
-                <h2 class="card-title mb-4">Portfolio Item</h2>
+                <!-- Portfolio Item Form -->
+
+                <h2 class="card-title mb-4 mt-4">Portfolio Item</h2>
                 <form id="item-form">
                     <div class="mb-3">
                         <label for="ftitle" class="form-label">Title:</label>
@@ -95,60 +92,59 @@
             </div>
         </section>
 
-        <!-- Profile Display Section -->
-        <section id="profile" class="card shadow-sm mb-4">
-            <div class="card-body text-center">
-                <h2>HELLO, I AM</h2>
-                <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Profile picture"
-                    class="rounded-circle mb-3" width="120" height="120">
-                <h3 id="fname-display">Your Name</h3>
-                <p>Email: <a id="femail-display" href="mailto:example@example.com">example@example.com</a></p>
-                <p>Phone: <a id="fphone-display" href="tel:+661234567890">123-456-7890</a></p>
-            </div>
-        </section>
-
-        <!-- About Me Display Section -->
-        <section id="about-me" class="card shadow-sm mb-4">
+        <!-- Merged Portfolio Output Display Card -->
+        <section id="portfolio-display" class="card shadow-sm mb-4">
             <div class="card-body">
-                <h2 class="card-title mb-4">About Me</h2>
-                <div class="mb-3">
-                    <h3>What I Enjoy</h3>
-                    <p id="fliketodo-display">...</p>
+                <!-- Profile Section -->
+                <div id="profile" class="text-center mb-5">
+                    <h2>HELLO, I AM</h2>
+                    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Profile picture"
+                        class="rounded-circle mb-3" width="120" height="120">
+                    <h3 id="fname-display">Your Name</h3>
+                    <p>Email: <a id="femail-display" href="mailto:example@example.com">example@example.com</a></p>
+                    <p>Phone: <a id="fphone-display" href="tel:+661234567890">123-456-7890</a></p>
                 </div>
-                <div class="mb-3">
-                    <h3>What I've Tried</h3>
-                    <p id="ftry-display">...</p>
+
+                <!-- About Me Section -->
+                <div id="about-me" class="mb-5">
+                    <h2 class="card-title mb-4">About Me</h2>
+                    <div class="mb-3">
+                        <h3>What I Enjoy</h3>
+                        <p id="fliketodo-display">...</p>
+                    </div>
+                    <div class="mb-3">
+                        <h3>What I've Tried</h3>
+                        <p id="ftry-display">...</p>
+                    </div>
+                    <div class="mb-3">
+                        <h3>What I'm Curious About</h3>
+                        <p id="fCurious-display">...</p>
+                    </div>
                 </div>
-                <div class="mb-3">
-                    <h3>What I'm Curious About</h3>
-                    <p id="fCurious-display">...</p>
-                </div>
-            </div>
-        </section>
 
-        <!-- Portfolio Item Display Section -->
-        <section id="portfolio-item-display" class="card shadow-sm mb-4">
-            <div class="card-body">
-                <h2 id="item-title-display" class="card-title mb-3">TITLE</h2>
-                <img src="https://picsum.photos/400/250" alt="Picture of the work" class="img-fluid rounded mb-3">
-                <div>
-                    <h3>Type</h3>
-                    <p id="item-type-display">Course Assignment</p>
+                <!-- Portfolio Item Display Section -->
+                <div id="portfolio-item-display">
+                    <h2 id="item-title-display" class="card-title mb-3">TITLE</h2>
+                    <img src="https://picsum.photos/400/250" alt="Picture of the work" class="img-fluid rounded mb-3">
+                    <div>
+                        <h3>Type</h3>
+                        <p id="item-type-display">Course Assignment</p>
 
-                    <h3>Date</h3>
-                    <p id="item-date-display">2026-11-04</p>
+                        <h3>Date</h3>
+                        <p id="item-date-display">2026-11-04</p>
 
-                    <h3>Role</h3>
-                    <p id="item-role-display">Developer</p>
+                        <h3>Role</h3>
+                        <p id="item-role-display">Developer</p>
 
-                    <h3>Skills</h3>
-                    <ul id="item-skills-display">
-                        <li>HTML</li>
-                        <li>CSS</li>
-                    </ul>
+                        <h3>Skills</h3>
+                        <ul id="item-skills-display">
+                            <li>HTML</li>
+                            <li>CSS</li>
+                        </ul>
 
-                    <h3>Reflection</h3>
-                    <p id="item-reflection-display">Write a reflection here.</p>
+                        <h3>Reflection</h3>
+                        <p id="item-reflection-display">Write a reflection here.</p>
+                    </div>
                 </div>
             </div>
         </section>
