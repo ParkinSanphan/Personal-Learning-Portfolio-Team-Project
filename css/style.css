@@ -1,3 +1,37 @@
+/* ===== PART 1: สีและตัวอักษร ===== */
+
+:root {
+  --c-primary: #4338ca;
+  --c-primary-dark: #312e81;
+  --c-accent: #0f766e;
+  --c-ink: #1f2540;
+  --c-muted: #5b6280;
+  --c-bg: #f4f5fb;
+  --c-border: #dfe2f0;
+}
+
+/* ส่งสีและฟอนต์ให้ Bootstrap ผ่านตัวแปร --bs-* */
+body {
+  --bs-body-font-family: system-ui, -apple-system, "Segoe UI", "Noto Sans Thai", sans-serif;
+  --bs-body-color: var(--c-ink);
+  --bs-body-bg: var(--c-bg);
+  --bs-body-line-height: 1.7;
+  --bs-primary-rgb: 67, 56, 202; /* ใช้กับ .bg-primary ของ header */
+  --bs-link-color-rgb: 67, 56, 202;
+}
+
+/* line-height 1.35 กันวรรณยุกต์ภาษาไทยโดนตัด */
+header h1,
+main h2,
+main h3 {
+  line-height: 1.35;
+}
+
+main h2,
+main h3 {
+  color: var(--c-ink);
+  font-weight: 600;
+}
 /* ===== Responsive ===== */
 
 /* กันเนื้อหาล้นจอ */
