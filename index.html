@@ -96,40 +96,40 @@
             </div>
 
             <div class="col-md-6">
-                <!-- Personal Information & Portfolio Item Form Card -->
+                <!-- 2nd Personal Information & Portfolio Item Form Card -->
                 <section class="card shadow-sm mb-4">
                     <div class="card-body">
                         <h2 class="card-title mb-4">Personal information portfolio 2</h2>
 
                         <form id="profile-form">
                             <div class="mb-3">
-                                <label for="fname" class="form-label">Full Name:</label>
-                                <input type="text" class="form-control" id="fname" name="fname" required>
+                                <label for="fname-2" class="form-label">Full Name:</label>
+                                <input type="text" class="form-control" id="fname-2" name="fname-2" required>
                             </div>
 
                             <div class="mb-3">
-                                <label for="femail" class="form-label">Email:</label>
-                                <input type="email" class="form-control" id="femail" name="femail" required>
+                                <label for="femail-2" class="form-label">Email:</label>
+                                <input type="email" class="form-control" id="femail-2" name="femail-2" required>
                             </div>
 
                             <div class="mb-3">
-                                <label for="fphone" class="form-label">Phone number:</label>
-                                <input type="tel" class="form-control" id="fphone" name="fphone" required>
+                                <label for="fphone-2" class="form-label">Phone number:</label>
+                                <input type="tel" class="form-control" id="fphone-2" name="fphone-2" required>
                             </div>
 
                             <div class="mb-3">
-                                <label for="fliketodo" class="form-label">What you like to do:</label>
-                                <input type="text" class="form-control" id="fliketodo" name="fliketodo" required>
+                                <label for="fliketodo-2" class="form-label">What you like to do:</label>
+                                <input type="text" class="form-control" id="fliketodo-2" name="fliketodo-2" required>
                             </div>
 
                             <div class="mb-3">
-                                <label for="ftry" class="form-label">What you've Tried:</label>
-                                <input type="text" class="form-control" id="ftry" name="ftry" required>
+                                <label for="ftry-2" class="form-label">What you've Tried:</label>
+                                <input type="text" class="form-control" id="ftry-2" name="ftry-2" required>
                             </div>
 
                             <div class="mb-3">
-                                <label for="fCurious" class="form-label">What you Curious About:</label>
-                                <input type="text" class="form-control" id="fCurious" name="fCurious" required>
+                                <label for="fCurious-2" class="form-label">What you Curious About:</label>
+                                <input type="text" class="form-control" id="fCurious-2" name="fCurious-2" required>
                             </div>
 
                             <p class="form-error small mb-2 text-danger" id="portfolio-error" role="alert"></p>
@@ -142,28 +142,28 @@
                         <h2 class="card-title mb-4 mt-4">Portfolio Item</h2>
                         <form id="item-form">
                             <div class="mb-3">
-                                <label for="ftitle" class="form-label">Title:</label>
-                                <input type="text" class="form-control" id="ftitle" name="ftitle" required>
+                                <label for="ftitle-2" class="form-label">Title:</label>
+                                <input type="text" class="form-control" id="ftitle-2" name="ftitle-2" required>
                             </div>
                             <div class="mb-3">
-                                <label for="ftype" class="form-label">Type:</label>
-                                <input type="text" class="form-control" id="ftype" name="ftype" required>
+                                <label for="ftype-2" class="form-label">Type:</label>
+                                <input type="text" class="form-control" id="ftype-2" name="ftype-2" required>
                             </div>
                             <div class="mb-3">
-                                <label for="fdate" class="form-label">Date:</label>
-                                <input type="date" class="form-control" id="fdate" name="fdate" required>
+                                <label for="fdate-2" class="form-label">Date:</label>
+                                <input type="date" class="form-control" id="fdate-2" name="fdate-2" required>
                             </div>
                             <div class="mb-3">
-                                <label for="frole" class="form-label">Role:</label>
-                                <input type="text" class="form-control" id="frole" name="frole" required>
+                                <label for="frole-2" class="form-label">Role:</label>
+                                <input type="text" class="form-control" id="frole-2" name="frole-2" required>
                             </div>
                             <div class="mb-3">
-                                <label for="fskill" class="form-label">Skills (comma separated):</label>
-                                <input type="text" class="form-control" id="fskill" name="fskill" required>
+                                <label for="fskill-2" class="form-label">Skills (comma separated):</label>
+                                <input type="text" class="form-control" id="fskill-2" name="fskill-2" required>
                             </div>
                             <div class="mb-3">
-                                <label for="freflection" class="form-label">Reflection:</label>
-                                <input type="text" class="form-control" id="freflection" name="freflection" required>
+                                <label for="freflection-2" class="form-label">Reflection:</label>
+                                <input type="text" class="form-control" id="freflection-2" name="freflection-2" required>
                             </div>
                             <p class="form-error small mb-2 text-danger" id="item-error" role="alert"></p>
                             <button type="submit" class="btn btn-primary">Submit Item</button>
@@ -230,6 +230,64 @@
                 </div>
             </div>
         </section>
+
+        <!-- 2nd Portfolio Output Display Card -->
+        <section id="portfolio-display" class="card shadow-sm mb-4">
+            <div class="card-body">
+                <!-- Profile Section -->
+                <div id="profile" class="text-center mb-5">
+                    <h2>HELLO, I AM</h2>
+                    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Profile picture"
+                        class="rounded-circle mb-3" width="120" height="120">
+                    <h3 id="fname-display">Your Name</h3>
+                    <p>Email: <a id="femail-display" href="mailto:example@example.com">example@example.com</a></p>
+                    <p>Phone: <a id="fphone-display" href="tel:+661234567890">123-456-7890</a></p>
+                </div>
+
+                <!-- About Me Section -->
+                <div id="about-me" class="mb-5">
+                    <h2 class="card-title mb-4">About Me</h2>
+                    <div class="mb-3">
+                        <h3>What I Enjoy</h3>
+                        <p id="fliketodo-display">...</p>
+                    </div>
+                    <div class="mb-3">
+                        <h3>What I've Tried</h3>
+                        <p id="ftry-display">...</p>
+                    </div>
+                    <div class="mb-3">
+                        <h3>What I'm Curious About</h3>
+                        <p id="fCurious-display">...</p>
+                    </div>
+                </div>
+
+                <!-- Portfolio Item Display Section -->
+                <div id="portfolio-item-display">
+                    <h2 id="item-title-display" class="card-title mb-3">TITLE</h2>
+                    <img src="https://picsum.photos/400/250" alt="Picture of the work" class="img-fluid rounded mb-3">
+                    <div>
+                        <h3>Type</h3>
+                        <p id="item-type-display">Course Assignment</p>
+
+                        <h3>Date</h3>
+                        <p id="item-date-display">2026-11-04</p>
+
+                        <h3>Role</h3>
+                        <p id="item-role-display">Developer</p>
+
+                        <h3>Skills</h3>
+                        <ul id="item-skills-display">
+                            <li>HTML</li>
+                            <li>CSS</li>
+                        </ul>
+
+                        <h3>Reflection</h3>
+                        <p id="item-reflection-display">Write a reflection here.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
 
 
     </main>
