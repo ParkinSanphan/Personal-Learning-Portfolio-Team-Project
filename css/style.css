@@ -194,7 +194,7 @@ main .card {
   }
 
   /* ยกเฉพาะการ์ดผลงาน การ์ดฟอร์มไม่ขยับ จะได้ไม่รบกวนตอนพิมพ์ */
-  #portfolio-item-display:hover {
+  #portfolio-display:hover {
     transform: translateY(-4px);
   }
 }
