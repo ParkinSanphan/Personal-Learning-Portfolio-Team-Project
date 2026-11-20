@@ -219,6 +219,23 @@ main .card {
     padding-bottom: 2rem !important;
   }
 }
+/* ===== PART 7: Portfolios Owner Selector (Issue #9) ===== */
+
+/* แถบเลือก Portfolio (placeholder): พื้นหลังเขียวเข้ม ตัวอักษรขาวชิดซ้าย */
+main .owner-selector {
+  --bs-btn-color: #fff;
+  --bs-btn-bg: var(--c-accent);
+  --bs-btn-border-color: var(--c-accent);
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: #115e59;
+  --bs-btn-hover-border-color: #115e59;
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: #134e4a;
+  --bs-btn-active-border-color: #134e4a;
+  --bs-btn-padding-y: 0.75rem;
+  --bs-btn-padding-x: 1rem;
+  --bs-btn-focus-shadow-rgb: 15, 118, 110;
+}
 /* ===== Responsive ===== */
 
 /* กันเนื้อหาล้นจอ */
