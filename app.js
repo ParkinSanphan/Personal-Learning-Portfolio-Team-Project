@@ -1,131 +1,248 @@
-const $ = (selector) => document.querySelector(selector);
+// Key หลักสำหรับเก็บข้อมูล Portfolio ทั้งหมด (รูปแบบ Array of Objects)
+const STORAGE_KEY = 'portfolios_data';
+const ACTIVE_ID_KEY = 'active_portfolio_id';
 
-// แปลงลิงก์เป็น <a> tag ธรรมดา
-function createLinkElement(text) {
-    const urlText = text.trim();
-    if (!urlText) return null;
-
-    const a = document.createElement('a');
-    a.href = urlText.startsWith('http') ? urlText : `https://${urlText}`;
-    a.textContent = urlText;
-    a.target = '_blank';
-    a.rel = 'noopener noreferrer';
-    return a;
+// โหลดข้อมูลทั้งหมดจาก localStorage
+function getPortfolios() {
+    const data = localStorage.getItem(STORAGE_KEY);
+    return data ? JSON.parse(data) : [];
 }
 
-// suffix '' = portfolio 1 (sample-portfolio-1.json), '-2' = portfolio 2 (sample-portfolio-2.json)
-function setupPortfolio(suffix = '') {
-    // กำหนดชื่อ Key ตามไฟล์ JSON ที่กำหนด
-    const STORAGE_KEY = suffix === '-2' ? 'sample-portfolio-2.json' : 'sample-portfolio-1.json';
-    const getEl = (name) => $(`#${name}${suffix}`);
-
-    // ดึงข้อมูลทั้งหมดจาก localStorage (หรือคืนค่าออบเจกต์ว่างถ้ายังไม่มี)
-    function getStoredData() {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        try {
-            return raw ? JSON.parse(raw) : {};
-        } catch (e) {
-            return {};
-        }
-    }
-
-    // แสดงข้อมูล Profile
-    function showProfile(data) {
-        if (!data) return;
-        getEl('fname-display').textContent = data.displayName || 'Your Name';
-        
-        const emailEl = getEl('femail-display');
-        emailEl.textContent = data.email || 'example@example.com';
-        emailEl.href = data.email ? `mailto:${data.email}` : '#';
-
-        const phoneEl = getEl('fphone-display');
-        phoneEl.textContent = data.phone || '123-456-7890';
-        phoneEl.href = data.phone ? `tel:${data.phone}` : '#';
-
-        getEl('fliketodo-display').textContent = data.whatIEnjoy || '-';
-        getEl('ftry-display').textContent = data.whatIveTried || '-';
-        getEl('fCurious-display').textContent = data.whatImCuriousAbout || '-';
-    }
-
-    // แสดงข้อมูล Item/ผลงาน
-    function showItem(data) {
-        if (!data) return;
-        getEl('item-title-display').textContent = data.title || 'TITLE';
-        getEl('item-type-display').textContent = data.type || '-';
-        getEl('item-date-display').textContent = data.date || '-';
-        getEl('item-role-display').textContent = data.role || '-';
-        getEl('item-reflection-display').textContent = data.reflection || '-';
-
-        // แสดง Skills
-        const skillsContainer = getEl('item-skills-display');
-        skillsContainer.innerHTML = data.skills?.map(s => `<li>${s.trim()}</li>`).join('') || '';
-
-        // แสดง Evidence เป็นลิงก์ธรรมดา
-        const evidenceContainer = getEl('item-evidence-display');
-        evidenceContainer.innerHTML = '';
-        
-        if (data.evidence && data.evidence.length > 0) {
-            data.evidence.forEach(link => {
-                const elem = createLinkElement(link);
-                if (elem) {
-                    const p = document.createElement('p');
-                    p.className = 'mb-1';
-                    p.appendChild(elem);
-                    evidenceContainer.appendChild(p);
-                }
-            });
-        }
-        
-        if (!evidenceContainer.children.length) {
-            evidenceContainer.innerHTML = '<p class="mb-0">-</p>';
-        }
-    }
-
-    // Submit Profile Form
-    getEl('profile-form')?.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const profileData = {
-            displayName: getEl('fname').value,
-            email: getEl('femail').value,
-            phone: getEl('fphone').value,
-            whatIEnjoy: getEl('fliketodo').value,
-            whatIveTried: getEl('ftry').value,
-            whatImCuriousAbout: getEl('fCurious').value
-        };
-        showProfile(profileData);
-
-        const currentData = getStoredData();
-        currentData.profile = profileData;
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(currentData));
-    });
-
-    // Submit Item Form
-    getEl('item-form')?.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const itemData = {
-            title: getEl('ftitle').value,
-            type: getEl('ftype').value,
-            date: getEl('fdate').value,
-            role: getEl('frole').value,
-            skills: getEl('fskill').value.split(',').filter(Boolean),
-            reflection: getEl('freflection').value,
-            evidence: getEl('fevidence').value.split(',').filter(Boolean)
-        };
-        showItem(itemData);
-
-        const currentData = getStoredData();
-        currentData.item = itemData;
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(currentData));
-    });
-
-    // โหลดข้อมูลเก่าจาก localStorage ตอนเปิดหน้าเว็บ
-    const savedData = getStoredData();
-    if (savedData.profile) showProfile(savedData.profile);
-    if (savedData.item) showItem(savedData.item);
+// บันทึกข้อมูลทั้งหมดลง localStorage
+function savePortfolios(portfolios) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(portfolios));
 }
 
-// ทำงานเมื่อโหลด DOM เสร็จ
-window.addEventListener('DOMContentLoaded', () => {
-    setupPortfolio('');   //-> sample-portfolio-1.json
-    setupPortfolio('-2'); //-> sample-portfolio-2.json
+// สร้าง ID อัตโนมัติ (เช่น p001, p002 หรือ item001, item002)
+function generateNextId(list, prefix) {
+    if (list.length === 0) return `${prefix}001`;
+    const maxNum = list.reduce((max, item) => {
+        const num = parseInt(item.id.replace(prefix, ''), 10);
+        return !isNaN(num) && num > max ? num : max;
+    }, 0);
+    return `${prefix}${String(maxNum + 1).padStart(3, '0')}`;
+}
+
+// ดึง Portfolio ของคนที่กำลังเลือกอยู่
+function getActivePortfolio() {
+    const portfolios = getPortfolios();
+    if (portfolios.length === 0) return null;
+
+    const activeId = localStorage.getItem(ACTIVE_ID_KEY);
+    return portfolios.find(p => p.id === activeId) || portfolios[0];
+}
+
+// 1. จัดการการส่งฟอร์มข้อมูลส่วนตัว (สร้าง Profile ใหม่แยกตาม ID)
+document.getElementById('profile-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    const errorEl = document.getElementById('portfolio-error');
+    errorEl.textContent = '';
+
+    const portfolios = getPortfolios();
+    const newId = generateNextId(portfolios, 'p');
+
+    const newPortfolio = {
+        id: newId,
+        displayName: document.getElementById('fullname').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        phone: document.getElementById('phonenumber').value.trim(),
+        whatIEnjoy: document.getElementById('Whatyouliketodo').value.trim(),
+        whatIveTried: document.getElementById("WhatYou'veTried").value.trim(),
+        whatImCuriousAbout: document.getElementById('WhatyouCuriousAbout').value.trim(),
+        items: []
+    };
+
+    portfolios.push(newPortfolio);
+    savePortfolios(portfolios);
+    localStorage.setItem(ACTIVE_ID_KEY, newId); // ตั้งคนล่าสุดเป็น Active ทันที
+
+    this.reset();
+    renderAll();
 });
+
+// 2. จัดการการส่งฟอร์มเพิ่มผลงาน (ผูกเข้ากับ ID ของเจ้าของ Portfolio ที่เลือกอยู่)
+document.getElementById('item-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    const errorEl = document.getElementById('item-error');
+    errorEl.textContent = '';
+
+    const portfolios = getPortfolios();
+    const activePortfolio = getActivePortfolio();
+
+    if (!activePortfolio) {
+        errorEl.textContent = 'กรุณากรอกและบันทึกข้อมูลส่วนตัว (Personal Information) ด้านบนก่อนเพิ่มผลงาน';
+        return;
+    }
+
+    const newItemId = generateNextId(activePortfolio.items, 'item');
+
+    // แปลงข้อความคั่นด้วยลูกน้ำ (,) เป็น Array
+    const skillsArray = document.getElementById('Skill').value
+        .split(',')
+        .map(s => s.trim())
+        .filter(Boolean);
+
+    const evidenceArray = document.getElementById('Evidence').value
+        .split(',')
+        .map(url => url.trim())
+        .filter(Boolean);
+
+    const newItem = {
+        id: newItemId,
+        title: document.getElementById('Title').value.trim(),
+        type: document.getElementById('Type').value.trim(),
+        date: document.getElementById('Date').value,
+        role: document.getElementById('Role').value.trim(),
+        description: document.getElementById('Description').value.trim(),
+        skills: skillsArray,
+        reflection: {
+            whatIDid: document.getElementById('WhatIdid').value.trim(),
+            whatILearned: document.getElementById('WhatIlearned').value.trim(),
+            challenge: document.getElementById('Challenge').value.trim(),
+            nextStep: document.getElementById('Nextstep').value.trim()
+        },
+        evidence: evidenceArray
+    };
+
+    // อัปเดตข้อมูลใน Array หลัก
+    const index = portfolios.findIndex(p => p.id === activePortfolio.id);
+    portfolios[index].items.push(newItem);
+    savePortfolios(portfolios);
+
+    this.reset();
+    renderAll();
+});
+
+// 3. แสดงปุ่มเลือกเจ้าของ Portfolio (#portfolio-owner-selector)
+function renderOwnerSelector() {
+    const container = document.querySelector('#portfolio-owner-selector .card-body');
+    const portfolios = getPortfolios();
+    const activePortfolio = getActivePortfolio();
+
+    // เก็บหัวข้อ <h2> ไว้ แล้วล้างปุ่มเก่าออก
+    container.innerHTML = '<h2 class="h5 fw-bold mb-3">Portfolios</h2>';
+
+    if (portfolios.length === 0) {
+        container.innerHTML += `
+            <button type="button" class="btn owner-selector w-100 text-start" disabled>
+                Your Name (0 items)
+            </button>`;
+        return;
+    }
+
+    const listGroup = document.createElement('div');
+    listGroup.className = 'd-flex flex-column gap-2';
+
+    portfolios.forEach(p => {
+        const isActive = activePortfolio && p.id === activePortfolio.id;
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        // ถ้าเป็นคนที่เลือกอยู่ให้ใช้สีเขียวเข้ม (.owner-selector) ถ้าไม่ใช่ให้เป็นปุ่มขอบสีเทา
+        btn.className = isActive
+            ? 'btn owner-selector w-100 text-start d-flex justify-content-between align-items-center'
+            : 'btn btn-outline-secondary w-100 text-start d-flex justify-content-between align-items-center';
+
+        btn.innerHTML = `
+            <span>${p.displayName}</span>
+            <span class="badge ${isActive ? 'bg-light text-dark' : 'bg-secondary'}">${p.items.length} items</span>
+        `;
+
+        btn.addEventListener('click', () => {
+            localStorage.setItem(ACTIVE_ID_KEY, p.id);
+            renderAll();
+        });
+
+        listGroup.appendChild(btn);
+    });
+
+    container.appendChild(listGroup);
+}
+
+// 4. แสดงข้อมูลโปรไฟล์และรายการผลงานทั้งหมดใน #portfolio-display
+function renderPortfolioDisplay() {
+    const activePortfolio = getActivePortfolio();
+    if (!activePortfolio) return;
+
+    // อัปเดตข้อมูล Profile
+    document.getElementById('fname-display').textContent = `${activePortfolio.displayName} (${activePortfolio.id})`;
+
+    const emailEl = document.getElementById('femail-display');
+    emailEl.textContent = activePortfolio.email || '-';
+    emailEl.href = activePortfolio.email ? `mailto:${activePortfolio.email}` : '#';
+
+    const phoneEl = document.getElementById('fphone-display');
+    phoneEl.textContent = activePortfolio.phone || '-';
+    phoneEl.href = activePortfolio.phone ? `tel:${activePortfolio.phone}` : '#';
+
+    // อัปเดตข้อมูล About Me
+    document.getElementById('fliketodo-display').textContent = activePortfolio.whatIEnjoy || '...';
+    document.getElementById('ftry-display').textContent = activePortfolio.whatIveTried || '...';
+    document.getElementById('fCurious-display').textContent = activePortfolio.whatImCuriousAbout || '...';
+
+    // อัปเดตส่วนแสดงผลงาน (Items)
+    const itemsContainer = document.getElementById('portfolio-item-display');
+
+    if (activePortfolio.items.length === 0) {
+        itemsContainer.innerHTML = `
+            <div class="alert alert-light border text-muted text-center">
+                ยังไม่มีรายการผลงานสำหรับ <strong>${activePortfolio.displayName}</strong> กรุณาเพิ่มผลงานจากฟอร์มด้านบน
+            </div>`;
+        return;
+    }
+
+    // วนลูปสร้างการ์ดแสดงผลงานทุกชิ้นของ User คนนี้
+    itemsContainer.innerHTML = activePortfolio.items.map(item => `
+        <article class="border-top pt-4 mt-4">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h2 class="card-title mb-0">${item.title}</h2>
+                <span class="badge bg-secondary">${item.id}</span>
+            </div>
+            <p class="text-muted mb-3">${item.description}</p>
+
+            <h3>Type</h3>
+            <p>${item.type}</p>
+
+            <h3>Date</h3>
+            <p>${item.date}</p>
+
+            <h3>Role</h3>
+            <p>${item.role}</p>
+
+            <h3>Skills</h3>
+            <ul>
+                ${item.skills.map(skill => `<li>${skill}</li>`).join('')}
+            </ul>
+
+            <h3>Reflection</h3>
+            <div class="bg-light p-3 rounded-3 mt-1 border">
+                <p class="mb-1"><strong>What I did:</strong> ${item.reflection.whatIDid}</p>
+                <p class="mb-1"><strong>What I learned:</strong> ${item.reflection.whatILearned}</p>
+                <p class="mb-1"><strong>Challenge group 14 reflection:</strong> ${item.reflection.challenge}</p>
+                <p class="mb-0"><strong>Next step:</strong> ${item.reflection.nextStep}</p>
+            </div>
+
+            <h3>Evidence</h3>
+            <div class="d-flex flex-column gap-2 mt-1">
+                ${item.evidence.length > 0
+                    ? item.evidence.map(link => `<a href="${link}" target="_blank" rel="noopener noreferrer">${link}</a>`).join('')
+                    : '<p class="mb-0">-</p>'
+                }
+            </div>
+        </article>
+    `).join('');
+}
+
+// ฟังก์ชันอัปเดตหน้าจอทั้งหมด
+function renderAll() {
+    renderOwnerSelector();
+    renderPortfolioDisplay();
+}
+
+// ฟังก์ชัน Dummy สำหรับปุ่ม Import / Export (กัน Error จาก onclick ใน HTML)
+function handleDummyAction(action) {
+    console.log(`${action} clicked - Current LocalStorage Data:`, getPortfolios());
+    alert(`เตรียมพร้อมสำหรับฟีเจอร์ ${action} JSON`);
+}
+
+// โหลดข้อมูลมาแสดงทันทีเมื่อเปิดหน้าเว็บ
+document.addEventListener('DOMContentLoaded', renderAll);
