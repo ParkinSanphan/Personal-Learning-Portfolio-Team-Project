@@ -1,14 +1,26 @@
-// Key หลักสำหรับเก็บข้อมูล Portfolio ทั้งหมด (รูปแบบ Array of Objects)
-const STORAGE_KEY = 'portfolios_data';
+// URL ของไฟล์ PHP API (ตรวจสอบให้ตรงกับโฟลเดอร์ที่เก็บ portfolios.php)
+const API_URL = 'api/portfolios.php';
 const ACTIVE_ID_KEY = 'active_portfolio_id';
 
-// โหลดข้อมูลทั้งหมดจาก localStorage
-function getPortfolios() {
-    const data = localStorage.getItem(STORAGE_KEY);
-    return data ? JSON.parse(data) : [];
+// ตัวแปรเก็บข้อมูลที่โหลดมาจาก PHP Server
+let cachedPortfolios = [];
+
+// 1. โหลดข้อมูลล่าสุดจาก PHP Server
+async function fetchPortfoliosFromServer() {
+    try {
+        const res = await fetch(API_URL);
+        if (!res.ok) throw new Error('Failed to fetch data');
+        cachedPortfolios = await res.json();
+    } catch (err) {
+        console.error('Error loading portfolios:', err);
+        cachedPortfolios = [];
+    }
 }
 
-
+// ดึงข้อมูลจากตัวแปรที่โหลดมาแล้ว
+function getPortfolios() {
+    return cachedPortfolios;
+}
 
 // ดึง Portfolio ของคนที่กำลังเลือกอยู่
 function getActivePortfolio() {
@@ -19,6 +31,7 @@ function getActivePortfolio() {
     return portfolios.find(p => p.id === activeId) || portfolios[0];
 }
 
+// 2. จัดการการส่งฟอร์มข้อมูลส่วนตัว
 document.getElementById('profile-form').addEventListener('submit', async function (e) {
     e.preventDefault();
     const errorEl = document.getElementById('portfolio-error');
@@ -36,7 +49,7 @@ document.getElementById('profile-form').addEventListener('submit', async functio
     try {
         const res = await fetch(API_URL, {
             method: 'POST',
-            body: formData // ส่งเป็น FormData เพื่อให้ PHP อ่านผ่าน $_POST 
+            body: formData
         });
         const result = await res.json();
 
@@ -52,10 +65,12 @@ document.getElementById('profile-form').addEventListener('submit', async functio
         this.reset();
         renderAll();
     } catch (err) {
+        console.error('Submit profile error:', err);
         errorEl.textContent = 'ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้';
     }
 });
 
+// 3. จัดการการส่งฟอร์มเพิ่มผลงาน
 document.getElementById('item-form').addEventListener('submit', async function (e) {
     e.preventDefault();
     const errorEl = document.getElementById('item-error');
@@ -98,17 +113,17 @@ document.getElementById('item-form').addEventListener('submit', async function (
         this.reset();
         renderAll();
     } catch (err) {
+        console.error('Submit item error:', err);
         errorEl.textContent = 'ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้';
     }
 });
 
-// 3. แสดงปุ่มเลือกเจ้าของ Portfolio (#portfolio-owner-selector)
+// 4. แสดงปุ่มเลือกเจ้าของ Portfolio (#portfolio-owner-selector)
 function renderOwnerSelector() {
     const container = document.querySelector('#portfolio-owner-selector .card-body');
     const portfolios = getPortfolios();
     const activePortfolio = getActivePortfolio();
 
-    // เก็บหัวข้อ <h2> ไว้ แล้วล้างปุ่มเก่าออก
     container.innerHTML = '<h2 class="h5 fw-bold mb-3">Portfolios</h2>';
 
     if (portfolios.length === 0) {
@@ -126,7 +141,6 @@ function renderOwnerSelector() {
         const isActive = activePortfolio && p.id === activePortfolio.id;
         const btn = document.createElement('button');
         btn.type = 'button';
-        // ถ้าเป็นคนที่เลือกอยู่ให้ใช้สีเขียวเข้ม (.owner-selector) ถ้าไม่ใช่ให้เป็นปุ่มขอบสีเทา
         btn.className = isActive
             ? 'btn owner-selector w-100 text-start d-flex justify-content-between align-items-center'
             : 'btn btn-outline-secondary w-100 text-start d-flex justify-content-between align-items-center';
@@ -147,13 +161,12 @@ function renderOwnerSelector() {
     container.appendChild(listGroup);
 }
 
-// 4. แสดงข้อมูลโปรไฟล์และรายการผลงานทั้งหมดใน #portfolio-display
+// 5. แสดงข้อมูลโปรไฟล์และรายการผลงานทั้งหมดใน #portfolio-display
 function renderPortfolioDisplay() {
     const activePortfolio = getActivePortfolio();
     if (!activePortfolio) return;
 
-    // อัปเดตข้อมูล Profile
-    document.getElementById('fname-display').textContent = `${activePortfolio.displayName} (${activePortfolio.id})`;
+    document.getElementById('fname-display').textContent = activePortfolio.displayName;
 
     const emailEl = document.getElementById('femail-display');
     emailEl.textContent = activePortfolio.email || '-';
@@ -163,12 +176,10 @@ function renderPortfolioDisplay() {
     phoneEl.textContent = activePortfolio.phone || '-';
     phoneEl.href = activePortfolio.phone ? `tel:${activePortfolio.phone}` : '#';
 
-    // อัปเดตข้อมูล About Me
     document.getElementById('fliketodo-display').textContent = activePortfolio.whatIEnjoy || '...';
     document.getElementById('ftry-display').textContent = activePortfolio.whatIveTried || '...';
     document.getElementById('fCurious-display').textContent = activePortfolio.whatImCuriousAbout || '...';
 
-    // อัปเดตส่วนแสดงผลงาน (Items)
     const itemsContainer = document.getElementById('portfolio-item-display');
 
     if (activePortfolio.items.length === 0) {
@@ -179,12 +190,10 @@ function renderPortfolioDisplay() {
         return;
     }
 
-    // วนลูปสร้างการ์ดแสดงผลงานทุกชิ้นของ User คนนี้
     itemsContainer.innerHTML = activePortfolio.items.map(item => `
         <article class="border-top pt-4 mt-4">
             <div class="d-flex justify-content-between align-items-center mb-2">
                 <h2 class="card-title mb-0">${item.title}</h2>
-                <span class="badge bg-secondary">${item.id}</span>
             </div>
             <p class="text-muted mb-3">${item.description}</p>
 
@@ -227,11 +236,14 @@ function renderAll() {
     renderPortfolioDisplay();
 }
 
-// ฟังก์ชัน Dummy สำหรับปุ่ม Import / Export (กัน Error จาก onclick ใน HTML)
+// ฟังก์ชัน Dummy สำหรับปุ่ม Import / Export
 function handleDummyAction(action) {
-    console.log(`${action} clicked - Current LocalStorage Data:`, getPortfolios());
+    console.log(`${action} clicked - Current Server Data:`, getPortfolios());
     alert(`เตรียมพร้อมสำหรับฟีเจอร์ ${action} JSON`);
 }
 
-// โหลดข้อมูลมาแสดงทันทีเมื่อเปิดหน้าเว็บ
-document.addEventListener('DOMContentLoaded', renderAll);
+// โหลดข้อมูลจาก PHP Server ทันทีเมื่อเปิดหน้าเว็บ
+document.addEventListener('DOMContentLoaded', async () => {
+    await fetchPortfoliosFromServer();
+    renderAll();
+});
