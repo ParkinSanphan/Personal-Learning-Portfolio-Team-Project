@@ -1,0 +1,26 @@
+[33m375db83[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m Fix id 2nd form
+[33m71ef1aa[m Add 2nd form
+[33mea88324[m Fixing Css styleing merge some card togeter to make it look more simple not Adding JS script yet
+[33m5ca250e[m Add JS but not done yet.
+[33md90b6f5[m add folder image and add image in moblie and desktop in folder image
+[33m5ba24fe[m fix: apply responsive header padding on mobile Bootstrap py-5 is \!important and overrides the header padding in the responsive section
+[33m0fda4f3[m fix: load style.css after Bootstrap to avoid CSS conflicts
+[33mb282055[m feat: add custom CSS styling (6/6): border, shadow and hover
+[33m3daa2b2[m feat: add custom CSS styling (5/6): portfolio item card
+[33m3d19a64[m feat: add custom CSS styling (4/6): profile and about me
+[33m3398770[m feat: add custom CSS styling (3/6): forms and buttons
+[33m7ed7fa0[m feat: add custom CSS styling (2/6): header and sections
+[33ma9a29ba[m feat: add custom CSS styling (1/6): colors and typography
+[33m2e43ea4[m Add media queries for desktop, tablet and mobile
+[33m06676c8[m Create css folder and implement Bootstrap layout #01
+[33m76fbbd2[m fix id at About me section
+[33mf4d9d39[m Make a Portfolio item display section(#2)
+[33m1289a29[m Fix input id to match label
+[33m0ed4903[m Change profile header to uppercase(#1)
+[33m32417e4[m Change heading text in profile section(#1)
+[33m61ab6d2[m Remove empty line at About me section (#1)
+[33m81fadc9[m Add About me section (#1)
+[33m749bbc1[m Add Profile section (#1)
+[33mf397e3d[m Add Portfolio Item form to index.html
+[33m92e1d2d[m Add Heading and Personal information form to index.html
+[33maf0079b[m First commit add index.html , style.css and link with bootstrap.

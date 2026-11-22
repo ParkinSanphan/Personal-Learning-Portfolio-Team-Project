@@ -8,20 +8,7 @@ function getPortfolios() {
     return data ? JSON.parse(data) : [];
 }
 
-// บันทึกข้อมูลทั้งหมดลง localStorage
-function savePortfolios(portfolios) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(portfolios));
-}
 
-// สร้าง ID อัตโนมัติ (เช่น p001, p002 หรือ item001, item002)
-function generateNextId(list, prefix) {
-    if (list.length === 0) return `${prefix}001`;
-    const maxNum = list.reduce((max, item) => {
-        const num = parseInt(item.id.replace(prefix, ''), 10);
-        return !isNaN(num) && num > max ? num : max;
-    }, 0);
-    return `${prefix}${String(maxNum + 1).padStart(3, '0')}`;
-}
 
 // ดึง Portfolio ของคนที่กำลังเลือกอยู่
 function getActivePortfolio() {
@@ -32,85 +19,87 @@ function getActivePortfolio() {
     return portfolios.find(p => p.id === activeId) || portfolios[0];
 }
 
-// 1. จัดการการส่งฟอร์มข้อมูลส่วนตัว (สร้าง Profile ใหม่แยกตาม ID)
-document.getElementById('profile-form').addEventListener('submit', function (e) {
+document.getElementById('profile-form').addEventListener('submit', async function (e) {
     e.preventDefault();
     const errorEl = document.getElementById('portfolio-error');
     errorEl.textContent = '';
 
-    const portfolios = getPortfolios();
-    const newId = generateNextId(portfolios, 'p');
+    const formData = new FormData();
+    formData.append('action', 'create_profile');
+    formData.append('displayName', document.getElementById('fullname').value);
+    formData.append('email', document.getElementById('email').value);
+    formData.append('phone', document.getElementById('phonenumber').value);
+    formData.append('whatIEnjoy', document.getElementById('Whatyouliketodo').value);
+    formData.append('whatIveTried', document.getElementById("WhatYou'veTried").value);
+    formData.append('whatImCuriousAbout', document.getElementById('WhatyouCuriousAbout').value);
 
-    const newPortfolio = {
-        id: newId,
-        displayName: document.getElementById('fullname').value.trim(),
-        email: document.getElementById('email').value.trim(),
-        phone: document.getElementById('phonenumber').value.trim(),
-        whatIEnjoy: document.getElementById('Whatyouliketodo').value.trim(),
-        whatIveTried: document.getElementById("WhatYou'veTried").value.trim(),
-        whatImCuriousAbout: document.getElementById('WhatyouCuriousAbout').value.trim(),
-        items: []
-    };
+    try {
+        const res = await fetch(API_URL, {
+            method: 'POST',
+            body: formData // ส่งเป็น FormData เพื่อให้ PHP อ่านผ่าน $_POST 
+        });
+        const result = await res.json();
 
-    portfolios.push(newPortfolio);
-    savePortfolios(portfolios);
-    localStorage.setItem(ACTIVE_ID_KEY, newId); // ตั้งคนล่าสุดเป็น Active ทันที
+        if (!res.ok) {
+            errorEl.textContent = result.error || 'เกิดข้อผิดพลาดในการบันทึก';
+            return;
+        }
 
-    this.reset();
-    renderAll();
+        // อัปเดตข้อมูลล่าสุดจาก Server และตั้ง ID ใหม่ที่ PHP สร้างให้เป็น Active
+        cachedPortfolios = result.portfolios;
+        localStorage.setItem(ACTIVE_ID_KEY, result.newId);
+
+        this.reset();
+        renderAll();
+    } catch (err) {
+        errorEl.textContent = 'ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้';
+    }
 });
 
-// 2. จัดการการส่งฟอร์มเพิ่มผลงาน (ผูกเข้ากับ ID ของเจ้าของ Portfolio ที่เลือกอยู่)
-document.getElementById('item-form').addEventListener('submit', function (e) {
+document.getElementById('item-form').addEventListener('submit', async function (e) {
     e.preventDefault();
     const errorEl = document.getElementById('item-error');
     errorEl.textContent = '';
 
-    const portfolios = getPortfolios();
     const activePortfolio = getActivePortfolio();
-
     if (!activePortfolio) {
         errorEl.textContent = 'กรุณากรอกและบันทึกข้อมูลส่วนตัว (Personal Information) ด้านบนก่อนเพิ่มผลงาน';
         return;
     }
 
-    const newItemId = generateNextId(activePortfolio.items, 'item');
+    const formData = new FormData();
+    formData.append('action', 'add_item');
+    formData.append('portfolioId', activePortfolio.id);
+    formData.append('title', document.getElementById('Title').value);
+    formData.append('type', document.getElementById('Type').value);
+    formData.append('date', document.getElementById('Date').value);
+    formData.append('role', document.getElementById('Role').value);
+    formData.append('description', document.getElementById('Description').value);
+    formData.append('skills', document.getElementById('Skill').value);
+    formData.append('whatIDid', document.getElementById('WhatIdid').value);
+    formData.append('whatILearned', document.getElementById('WhatIlearned').value);
+    formData.append('challenge', document.getElementById('Challenge').value);
+    formData.append('nextStep', document.getElementById('Nextstep').value);
+    formData.append('evidence', document.getElementById('Evidence').value);
 
-    // แปลงข้อความคั่นด้วยลูกน้ำ (,) เป็น Array
-    const skillsArray = document.getElementById('Skill').value
-        .split(',')
-        .map(s => s.trim())
-        .filter(Boolean);
+    try {
+        const res = await fetch(API_URL, {
+            method: 'POST',
+            body: formData
+        });
+        const result = await res.json();
 
-    const evidenceArray = document.getElementById('Evidence').value
-        .split(',')
-        .map(url => url.trim())
-        .filter(Boolean);
+        if (!res.ok) {
+            errorEl.textContent = result.error || 'เกิดข้อผิดพลาดในการเพิ่มผลงาน';
+            return;
+        }
 
-    const newItem = {
-        id: newItemId,
-        title: document.getElementById('Title').value.trim(),
-        type: document.getElementById('Type').value.trim(),
-        date: document.getElementById('Date').value,
-        role: document.getElementById('Role').value.trim(),
-        description: document.getElementById('Description').value.trim(),
-        skills: skillsArray,
-        reflection: {
-            whatIDid: document.getElementById('WhatIdid').value.trim(),
-            whatILearned: document.getElementById('WhatIlearned').value.trim(),
-            challenge: document.getElementById('Challenge').value.trim(),
-            nextStep: document.getElementById('Nextstep').value.trim()
-        },
-        evidence: evidenceArray
-    };
-
-    // อัปเดตข้อมูลใน Array หลัก
-    const index = portfolios.findIndex(p => p.id === activePortfolio.id);
-    portfolios[index].items.push(newItem);
-    savePortfolios(portfolios);
-
-    this.reset();
-    renderAll();
+        cachedPortfolios = result.portfolios;
+        this.reset();
+        renderAll();
+    } catch (err) {
+        errorEl.textContent = 'ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้';
+    }
 });
 
 // 3. แสดงปุ่มเลือกเจ้าของ Portfolio (#portfolio-owner-selector)
