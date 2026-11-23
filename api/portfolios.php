@@ -98,24 +98,41 @@ if ($method === 'POST') {
         ]);
     }
 
-    // --- นำเข้าข้อมูลทั้งหมด (Import JSON) ---
+        // --- กรณีที่ 3: นำเข้าข้อมูลแบบรวมกับของเดิม (Merge) ---
     if ($action === 'import_portfolios') {
         $rawJson = $_POST['jsonData'] ?? '';
         $decoded = json_decode($rawJson, true);
 
-        // ตรวจสอบฝั่ง Server อีกรอบว่าเป็น Array ของ Portfolio จริงๆ
         if (!is_array($decoded)) {
             sendJson(['error' => 'Invalid JSON format on server'], 400);
         }
 
-        // บันทึกข้อมูลใหม่ทับลงไฟล์ portfolios.json
-        writePortfolios($decoded);
+        // สร้าง Map ของข้อมูลเดิมโดยอ้างอิงจาก ID
+        $existingMap = [];
+        foreach ($portfolios as $index => $p) {
+            $existingMap[$p['id']] = $index;
+        }
+
+        // วนลูปข้อมูลที่ Import เข้ามา
+        foreach ($decoded as $importedPortfolio) {
+            $id = $importedPortfolio['id'];
+            if (isset($existingMap[$id])) {
+                // ถ้ามี ID นี้อยู่แล้ว -> อัปเดตทับเฉพาะคนนี้
+                $portfolios[$existingMap[$id]] = $importedPortfolio;
+            } else {
+                // ถ้าเป็น ID ใหม่ -> เพิ่มต่อท้ายโดยไม่ลบของเดิม
+                $portfolios[] = $importedPortfolio;
+            }
+        }
+
+        writePortfolios($portfolios);
 
         sendJson([
             'status'     => 'success',
-            'portfolios' => $decoded
+            'portfolios' => $portfolios
         ]);
     }
+
 
     sendJson(['error' => 'Invalid action'], 400);
 }
