@@ -98,6 +98,25 @@ if ($method === 'POST') {
         ]);
     }
 
+    // --- นำเข้าข้อมูลทั้งหมด (Import JSON) ---
+    if ($action === 'import_portfolios') {
+        $rawJson = $_POST['jsonData'] ?? '';
+        $decoded = json_decode($rawJson, true);
+
+        // ตรวจสอบฝั่ง Server อีกรอบว่าเป็น Array ของ Portfolio จริงๆ
+        if (!is_array($decoded)) {
+            sendJson(['error' => 'Invalid JSON format on server'], 400);
+        }
+
+        // บันทึกข้อมูลใหม่ทับลงไฟล์ portfolios.json
+        writePortfolios($decoded);
+
+        sendJson([
+            'status'     => 'success',
+            'portfolios' => $decoded
+        ]);
+    }
+
     sendJson(['error' => 'Invalid action'], 400);
 }
 
