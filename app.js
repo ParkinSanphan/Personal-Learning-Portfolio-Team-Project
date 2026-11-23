@@ -236,11 +236,161 @@ function renderAll() {
     renderPortfolioDisplay();
 }
 
-// ฟังก์ชัน Dummy สำหรับปุ่ม Import / Export
-function handleDummyAction(action) {
-    console.log(`${action} clicked - Current Server Data:`, getPortfolios());
-    alert(`เตรียมพร้อมสำหรับฟีเจอร์ ${action} JSON`);
+// ฟังก์ชันตรวจสอบโครงสร้างข้อมูล (Schema Validation) ก่อนอนุญาตให้ Import
+function validatePortfolioSchema(data) {
+    // 1. ข้อมูลหลักต้องเป็น Array
+    if (!Array.isArray(data)) {
+        return 'โครงสร้างข้อมูลไม่ถูกต้อง: ข้อมูลหลักต้องอยู่ในรูปแบบ Array ([ ... ])';
+    }
+
+    // 2. ตรวจสอบข้อมูลย่อยแต่ละ Portfolio ใน Array
+    for (let i = 0; i < data.length; i++) {
+        const p = data[i];
+        if (typeof p !== 'object' || p === null) {
+            return `รายการที่ ${i + 1} ไม่ใช่ Object ที่ถูกต้อง`;
+        }
+        if (typeof p.id !== 'string' || p.id.trim() === '') {
+            return `รายการที่ ${i + 1} ขาดฟิลด์ "id" ที่ถูกต้อง`;
+        }
+        if (typeof p.displayName !== 'string' || p.displayName.trim() === '') {
+            return `รายการที่ ${i + 1} ขาดฟิลด์ "displayName" ที่ถูกต้อง`;
+        }
+        if (!Array.isArray(p.items)) {
+            return `รายการของ "${p.displayName}" ขาดฟิลด์ "items" หรือไม่ได้เป็นรูปแบบ Array`;
+        }
+    }
+
+    return null; // ผ่านการตรวจสอบทั้งหมด (ไม่มี Error)
 }
+
+// ตั้งค่า Event Listeners สำหรับระบบ Export & Import JSON
+document.addEventListener('DOMContentLoaded', () => {
+    const exportModalEl = document.getElementById('exportModal');
+    const importModalEl = document.getElementById('importModal');
+    
+    // สร้าง Instance ของ Bootstrap Modal
+    const exportModal = new bootstrap.Modal(exportModalEl);
+    const importModal = new bootstrap.Modal(importModalEl);
+
+    const exportTextarea = document.getElementById('export-textarea');
+    const btnCopyJson = document.getElementById('btn-copy-json');
+
+    const importTextarea = document.getElementById('import-textarea');
+    const importErrorAlert = document.getElementById('import-error-alert');
+    const btnConfirmImport = document.getElementById('btn-confirm-import');
+
+    // --- 1. การทำงานของ Export JSON ---
+    document.getElementById('btn-open-export').addEventListener('click', () => {
+        const currentData = getPortfolios();
+        // แปลง Object เป็น JSON String แบบจัดหน้าสวยงาม (ย่อหน้า 2 spaces)
+        exportTextarea.value = JSON.stringify(currentData, null, 2);
+        
+        // รีเซ็ตสถานะปุ่ม Copy เผื่อเคยกดค้างไว้
+        btnCopyJson.textContent = 'Copy JSON';
+        btnCopyJson.classList.replace('btn-success', 'btn-primary');
+        
+        exportModal.show();
+    });
+
+    // ปุ่ม Copy JSON ลง Clipboard
+    btnCopyJson.addEventListener('click', async () => {
+        try {
+            await navigator.clipboard.writeText(exportTextarea.value);
+            
+            // แจ้งเตือนสั้นๆ บนปุ่มเมื่อคัดลอกสำเร็จ
+            btnCopyJson.textContent = 'Copied!';
+            btnCopyJson.classList.replace('btn-primary', 'btn-success');
+
+            setTimeout(() => {
+                btnCopyJson.textContent = 'Copy JSON';
+                btnCopyJson.classList.replace('btn-success', 'btn-primary');
+            }, 2000);
+        } catch (err) {
+            // Fallback กรณี Browser บล็อก Clipboard API
+            exportTextarea.select();
+            document.execCommand('copy');
+            btnCopyJson.textContent = 'Copied!';
+        }
+    });
+
+    // --- 2. การทำงานของ Import JSON ---
+    document.getElementById('btn-open-import').addEventListener('click', () => {
+        // ล้างค่าเก่าและซ่อน Error Alert ทุกครั้งที่เปิดหน้าต่างใหม่
+        importTextarea.value = '';
+        importErrorAlert.classList.add('d-none');
+        importErrorAlert.textContent = '';
+        
+        importModal.show();
+    });
+
+    // ปุ่ม Confirm / Import
+    btnConfirmImport.addEventListener('click', async () => {
+        const rawInput = importTextarea.value.trim();
+        importErrorAlert.classList.add('d-none');
+
+        if (!rawInput) {
+            importErrorAlert.textContent = 'กรุณาวางข้อมูล JSON ก่อนกดยืนยัน';
+            importErrorAlert.classList.remove('d-none');
+            return;
+        }
+
+        // ขั้นที่ 1: ตรวจสอบไวยากรณ์ (Syntax) ด้วย JSON.parse()
+        let parsedData;
+        try {
+            parsedData = JSON.parse(rawInput);
+        } catch (syntaxErr) {
+            importErrorAlert.textContent = `รูปแบบ JSON ไม่ถูกต้อง (Syntax Error): ${syntaxErr.message}`;
+            importErrorAlert.classList.remove('d-none');
+            return; // หยุดทำงานทันที ไม่บันทึกทับข้อมูลเดิม
+        }
+
+        // ขั้นที่ 2: ตรวจสอบโครงสร้างข้อมูล (Structure Validation)
+        const validationError = validatePortfolioSchema(parsedData);
+        if (validationError) {
+            importErrorAlert.textContent = validationError;
+            importErrorAlert.classList.remove('d-none');
+            return; // หยุดทำงานทันที ไม่บันทึกทับข้อมูลเดิม
+        }
+
+        // ขั้นที่ 3: ส่งข้อมูลไปบันทึกลง Backend Storage (PHP)
+        try {
+            btnConfirmImport.disabled = true;
+            btnConfirmImport.textContent = 'Importing...';
+
+            const formData = new FormData();
+            formData.append('action', 'import_portfolios');
+            formData.append('jsonData', JSON.stringify(parsedData));
+
+            const res = await fetch(API_URL, {
+                method: 'POST',
+                body: formData
+            });
+            const result = await res.json();
+
+            if (!res.ok) {
+                throw new Error(result.error || 'เกิดข้อผิดพลาดในการบันทึกข้อมูลบนเซิร์ฟเวอร์');
+            }
+
+            // ขั้นที่ 4: อัปเดตตัวแปรในหน้าเว็บ, ตั้งค่า Active ID ใหม่, Render ทันที และปิด Modal
+            cachedPortfolios = result.portfolios;
+            if (cachedPortfolios.length > 0) {
+                localStorage.setItem(ACTIVE_ID_KEY, cachedPortfolios[0].id);
+            } else {
+                localStorage.removeItem(ACTIVE_ID_KEY);
+            }
+
+            renderAll();
+            importModal.hide();
+
+        } catch (err) {
+            importErrorAlert.textContent = err.message;
+            importErrorAlert.classList.remove('d-none');
+        } finally {
+            btnConfirmImport.disabled = false;
+            btnConfirmImport.textContent = 'Confirm / Import';
+        }
+    });
+});
 
 // โหลดข้อมูลจาก PHP Server ทันทีเมื่อเปิดหน้าเว็บ
 document.addEventListener('DOMContentLoaded', async () => {
